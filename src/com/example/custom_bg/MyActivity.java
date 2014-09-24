@@ -1,5 +1,7 @@
 package com.example.custom_bg;
-
+/*
+自定义渐变色的图片。
+ */
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">color</string>
+    <string name="start_color">开始颜色</string>
+    <string name="middle_color">中间颜色</string>
+    <string name="end_color">结束颜色</string>
+    <string name="okay">确定</string>
+    <string name="cancel">取消</string>
+    <string name="save_color">保存</string>
+    <string name="txt_tip">变化方向:</string>
+    <string name="dialog_title">选择颜色：点击中间圆确定</string>
+    <string name="more_tip">红绿蓝渐变色带</string>
+    <string name="dialog_color_picker">Color Picker</string>
+    <string name="press_color_to_apply">Press on Color to apply</string>
+    <string name="pref_category">Category</string>
+    <string name="color1_title">Color 1</string>
+    <string name="color1_summary">black color by default, set by reference</string>
+    <string name="color2_title">Color 2</string>
+    <string name="color2_summary">not persistent color\nalpha slider added via code</string>
+    <string name="color3_title">Color 3</string>
+    <string name="color3_summary">picker with alpha slider</string>
+    <string name="color4_title">Color 4</string>
+    <string name="color4_summary">color set with HEX code in xml</string>
+
+</resources>

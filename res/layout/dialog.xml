@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="#FFFFFF"
+              android:layout_width="wrap_content"
+              android:layout_height="400dp">
+
+    <com.example.custom_bg.colorpicker.ColorPickerView
+            android:layout_weight="2"
+            android:id="@+id/cpv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+    </com.example.custom_bg.colorpicker.ColorPickerView>
+
+    <LinearLayout
+            android:layout_weight="0"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+            <Button
+                    android:id="@+id/btn_cancel"
+                    android:text="@string/cancel"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="35dp"
+                    android:background="@drawable/circle_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+            <Button
+                    android:id="@+id/btn_okay"
+                    android:text="@string/okay"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="35dp"
+                    android:background="@drawable/circle_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

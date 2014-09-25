@@ -2,25 +2,27 @@ package com.example.custom_bg;
 /*
 自定义渐变色的图片。
  */
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.*;
 import com.example.custom_bg.mydialogs.ColorPickerDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MyActivity extends Activity implements View.OnClickListener {
@@ -30,14 +32,14 @@ public class MyActivity extends Activity implements View.OnClickListener {
     private Button btn_start, btn_middle, btn_end, btn_save;
     private ImageView img_bg;
     private GradientDrawable gd;
-    private int i,num_type=0;
+    private int i, num_type = 0;
     private int colors[] = {-65531, -15735040, -16776961};
     private Spinner spinner;
     private GradientDrawable.Orientation[] types = {
-            GradientDrawable.Orientation.TOP_BOTTOM,GradientDrawable.Orientation.BL_TR,
-            GradientDrawable.Orientation.BOTTOM_TOP,GradientDrawable.Orientation.BR_TL,
-            GradientDrawable.Orientation.LEFT_RIGHT,GradientDrawable.Orientation.RIGHT_LEFT,
-            GradientDrawable.Orientation.TL_BR,GradientDrawable.Orientation.TR_BL
+            GradientDrawable.Orientation.TOP_BOTTOM, GradientDrawable.Orientation.BL_TR,
+            GradientDrawable.Orientation.BOTTOM_TOP, GradientDrawable.Orientation.BR_TL,
+            GradientDrawable.Orientation.LEFT_RIGHT, GradientDrawable.Orientation.RIGHT_LEFT,
+            GradientDrawable.Orientation.TL_BR, GradientDrawable.Orientation.TR_BL
     };
 
     @Override
@@ -52,12 +54,12 @@ public class MyActivity extends Activity implements View.OnClickListener {
         btn_start = (Button) this.findViewById(R.id.start_color);
         btn_middle = (Button) this.findViewById(R.id.middle_color);
         btn_end = (Button) this.findViewById(R.id.end_color);
-        btn_save = (Button)this.findViewById(R.id.save_color);
-        spinner = (Spinner)this.findViewById(R.id.sp_chk);
-        String [] str_sp = {"从上到下","下左到上右","从下到上","下右到上左","从左到右","从右到左","上左到下右","上右到下左"};
+        btn_save = (Button) this.findViewById(R.id.save_color);
+        spinner = (Spinner) this.findViewById(R.id.sp_chk);
+        String[] str_sp = {"从上到下", "下左到上右", "从下到上", "下右到上左", "从左到右", "从右到左", "上左到下右", "上右到下左"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item,str_sp);
+                android.R.layout.simple_spinner_dropdown_item, str_sp);
         spinner.setAdapter(adapter);
         spinner.setSelection(4);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -76,7 +78,6 @@ public class MyActivity extends Activity implements View.OnClickListener {
 
         img_bg = (ImageView) this.findViewById(R.id.img_bg);
 
-        int h = getWindowManager().getDefaultDisplay().getHeight();
         int w = getWindowManager().getDefaultDisplay().getWidth();
         ViewGroup.LayoutParams params = img_bg.getLayoutParams();
         params.height = w;
@@ -91,7 +92,7 @@ public class MyActivity extends Activity implements View.OnClickListener {
     }
 
     private void init_bg() {
-        Log.i("set color:",colors[0]+"_"+colors[1]+"_"+colors[2]);
+        Log.i("set color:", colors[0] + "_" + colors[1] + "_" + colors[2]);
         gd = new GradientDrawable(types[num_type], colors);
         img_bg.setImageDrawable(gd);
     }
@@ -146,37 +147,54 @@ public class MyActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.save_color:
                 Log.i("MyActivity", "save_color");
-                byte[] pic_data = null;
-                FileOutputStream fos = null;
-                Date date = new Date();
-                String name = "bg_"+date.getYear()+date.getMonth()+date.getDay()+
-                        "_"+date.getHours()+date.getMinutes()+date.getSeconds();
                 File fDir = new File("/sdcard/customBG");
-                if (!fDir.exists()){
-                        fDir.mkdir();
-
+                if (!fDir.exists()) {
+                    fDir.mkdir();
                 }
-                String fpath = Environment.getExternalStorageDirectory()+
-                        File.separator+"customBG"+File.separator+name+".png";
-                img_bg.setDrawingCacheEnabled(true);
-                Bitmap bitmap = Bitmap.createBitmap(img_bg.getDrawingCache());
-                img_bg.setDrawingCacheEnabled(false);
-                if (bitmap != null){
-                    try{
-                        fos = new FileOutputStream(fpath);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    bitmap.compress(Bitmap.CompressFormat.PNG,100,fos);
-                    try{
-                        fos.flush();
-                        fos.close();
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
-               Toast.makeText(MyActivity.this,"保存成功！",Toast.LENGTH_SHORT).show();
+                byte[] pic_data = null;
+                Date date = new Date();
+                DateFormat df = new SimpleDateFormat("yyMMddhhmmss");
+                final String name = "bg"+df.format(date);
+                final EditText namet = new EditText(this, null);
+                namet.setText(name);
+                Dialog name_dialog = new AlertDialog.Builder(MyActivity.this)
+                        .setTitle("保存为:")
+                        .setView(namet)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                FileOutputStream fos = null;
+                                String fpath = Environment.getExternalStorageDirectory() +
+                                        File.separator + "customBG" + File.separator + namet.getText() + ".png";
+                                img_bg.setDrawingCacheEnabled(true);
+                                Bitmap bitmap = Bitmap.createBitmap(img_bg.getDrawingCache());
+                                img_bg.setDrawingCacheEnabled(false);
+                                if (bitmap != null) {
+                                    try {
+                                        fos = new FileOutputStream(fpath);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                                    try {
+                                        fos.flush();
+                                        fos.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
 
+                                Toast.makeText(MyActivity.this, "保存成功！", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .create();
+                name_dialog.show();
                 break;
             default:
                 break;

@@ -7,12 +7,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -41,6 +46,27 @@ public class MyActivity extends Activity implements View.OnClickListener {
             GradientDrawable.Orientation.LEFT_RIGHT, GradientDrawable.Orientation.RIGHT_LEFT,
             GradientDrawable.Orientation.TL_BR, GradientDrawable.Orientation.TR_BL
     };
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 1){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        System.exit(0);
+                    }
+                }).start();
+
+            }
+            super.handleMessage(msg);
+        }
+    };
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +87,7 @@ public class MyActivity extends Activity implements View.OnClickListener {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, str_sp);
         spinner.setAdapter(adapter);
-        spinner.setSelection(4);
+        spinner.setSelection(0);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -78,10 +104,9 @@ public class MyActivity extends Activity implements View.OnClickListener {
 
         img_bg = (ImageView) this.findViewById(R.id.img_bg);
 
-        int w = getWindowManager().getDefaultDisplay().getWidth();
         ViewGroup.LayoutParams params = img_bg.getLayoutParams();
-        params.height = w;
-        params.width = w;
+        params.height = getWindowManager().getDefaultDisplay().getHeight();
+        params.width = getWindowManager().getDefaultDisplay().getWidth();
         img_bg.setLayoutParams(params);
         init_bg();
 
@@ -95,6 +120,35 @@ public class MyActivity extends Activity implements View.OnClickListener {
         Log.i("set color:", colors[0] + "_" + colors[1] + "_" + colors[2]);
         gd = new GradientDrawable(types[num_type], colors);
         img_bg.setImageDrawable(gd);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu,menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_about:
+                Intent intent = new Intent(MyActivity.this,AboutActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.menu_quit:
+                Toast.makeText(MyActivity.this,R.string.str_quit,Toast.LENGTH_LONG).show();
+                Message msg = handler.obtainMessage();
+                msg.what = 1;
+                msg.sendToTarget();
+                break;
+            default:
+                break;
+        }
+
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

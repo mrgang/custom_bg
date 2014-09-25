@@ -10,6 +10,10 @@
     <string name="txt_tip">变化方向:</string>
     <string name="dialog_title">选择颜色：点击中间圆确定</string>
     <string name="more_tip">红绿蓝渐变色带</string>
+    <string name="txt_about">关于</string>
+    <string name="txt_quit">退出</string>
+    <string name="str_quit">即将退出</string>
+    <string name="tv_about">\n1.此应用主要功能为自定义创建渐变色的图片。\n\n2.图片的大小为手机屏幕的大小,保存在手机内存customBG。\n\n3.功能还有待完善，敬请关注。</string>
     <string name="dialog_color_picker">Color Picker</string>
     <string name="press_color_to_apply">Press on Color to apply</string>
     <string name="pref_category">Category</string>

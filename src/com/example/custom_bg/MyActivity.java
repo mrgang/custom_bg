@@ -8,9 +8,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.*;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -37,7 +39,7 @@ public class MyActivity extends Activity implements View.OnClickListener {
     private Button btn_start, btn_middle, btn_end, btn_save;
     private ImageView img_bg;
     private GradientDrawable gd;
-    private int i, num_type = 0;
+    private static int i, num_type = 0;
     private int colors[] = {-65531, -15735040, -16776961};
     private Spinner spinner;
     private GradientDrawable.Orientation[] types = {
@@ -46,10 +48,11 @@ public class MyActivity extends Activity implements View.OnClickListener {
             GradientDrawable.Orientation.LEFT_RIGHT, GradientDrawable.Orientation.RIGHT_LEFT,
             GradientDrawable.Orientation.TL_BR, GradientDrawable.Orientation.TR_BL
     };
-    private Handler handler = new Handler(){
+    //主线程睡眠500ms.
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == 1){
+            if (msg.what == 1) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -125,23 +128,86 @@ public class MyActivity extends Activity implements View.OnClickListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu,menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
 
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_about:
-                Intent intent = new Intent(MyActivity.this,AboutActivity.class);
+                Intent intent = new Intent(MyActivity.this, AboutActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_quit:
-                Toast.makeText(MyActivity.this,R.string.str_quit,Toast.LENGTH_LONG).show();
+                Toast.makeText(MyActivity.this, R.string.str_quit, Toast.LENGTH_LONG).show();
                 Message msg = handler.obtainMessage();
                 msg.what = 1;
                 msg.sendToTarget();
+                break;
+            case R.id.menu_bigpic:
+
+                GradientDrawable gd1 = new GradientDrawable(types[num_type], colors);
+                img_bg.setDrawingCacheEnabled(true);
+                Bitmap bitmap1 = Bitmap.createBitmap(img_bg.getDrawingCache());
+                img_bg.setDrawingCacheEnabled(false);
+
+                //Canvas canvas = new Canvas(bitmap);
+                //canvas.drawBitmap(bitmap1,0,0,new Paint());
+                //canvas.drawBitmap(bitmap1,bitmap1.getWidth(),0,new Paint());
+                Matrix matrix = new Matrix();
+                matrix.postScale(2.0f, 1.0f);
+                final Bitmap bitmap = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
+
+                File fDir = new File("/sdcard/customBG");
+                if (!fDir.exists()) {
+                    fDir.mkdir();
+                }
+                byte[] pic_data = null;
+                Date date = new Date();
+                DateFormat df = new SimpleDateFormat("yyMMddhhmmss");
+                final String name = "bg" + df.format(date);
+                final EditText namet = new EditText(this, null);
+                namet.setText(name);
+                Dialog name_dialog = new AlertDialog.Builder(MyActivity.this)
+                        .setTitle("保存为:")
+                        .setView(namet)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                FileOutputStream fos = null;
+                                String fpath = Environment.getExternalStorageDirectory() +
+                                        File.separator + "customBG" + File.separator + namet.getText() + ".png";
+
+
+                                if (bitmap != null) {
+                                    try {
+                                        fos = new FileOutputStream(fpath);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                                    try {
+                                        fos.flush();
+                                        fos.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    Toast.makeText(MyActivity.this, "保存成功！", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .create();
+                name_dialog.show();
+
                 break;
             default:
                 break;
@@ -208,7 +274,7 @@ public class MyActivity extends Activity implements View.OnClickListener {
                 byte[] pic_data = null;
                 Date date = new Date();
                 DateFormat df = new SimpleDateFormat("yyMMddhhmmss");
-                final String name = "bg"+df.format(date);
+                final String name = "bg" + df.format(date);
                 final EditText namet = new EditText(this, null);
                 namet.setText(name);
                 Dialog name_dialog = new AlertDialog.Builder(MyActivity.this)

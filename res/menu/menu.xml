@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
-        android:orderInCategory="1"
-        android:id="@+id/menu_about"
-        android:title="@string/txt_about"
-        />
+            android:orderInCategory="0"
+            android:id="@+id/menu_bigpic"
+            android:title="保存为大图"
+            />
+
+    <item
+            android:orderInCategory="1"
+            android:id="@+id/menu_about"
+            android:title="@string/txt_about"
+            />
     <item
             android:orderInCategory="2"
             android:id="@+id/menu_quit"

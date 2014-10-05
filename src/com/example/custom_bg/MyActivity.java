@@ -153,9 +153,6 @@ public class MyActivity extends Activity implements View.OnClickListener {
                 Bitmap bitmap1 = Bitmap.createBitmap(img_bg.getDrawingCache());
                 img_bg.setDrawingCacheEnabled(false);
 
-                //Canvas canvas = new Canvas(bitmap);
-                //canvas.drawBitmap(bitmap1,0,0,new Paint());
-                //canvas.drawBitmap(bitmap1,bitmap1.getWidth(),0,new Paint());
                 Matrix matrix = new Matrix();
                 matrix.postScale(2.0f, 1.0f);
                 final Bitmap bitmap = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
